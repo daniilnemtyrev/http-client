@@ -5,7 +5,8 @@ const fetchInputData = async () => {
 };
 
 const sendOutputData = async (obj) => {
-  await fetch("http://localhost:3000/writeAnswer/", {
+  console.log(obj);
+  await fetch("http://localhost:3000/write", {
     method: "POST",
     headers: {
       "Content-Type": "application/json;charset=utf-8",
@@ -29,12 +30,12 @@ function Input() {
 var toXML = window.jstoxml.toXML;
 
 const a = new Input();
-a.serializer();
-console.log(a);
+await a.serializer();
 
 function Output() {
   (this.sumResult = 0), (this.mulResult = 0), (this.sorted = []);
   this.deserializer = function () {
+ 
     this.sumResult = +(
       a.sum.reduce((prevValue, curValue) => prevValue + curValue) * a.k
     ).toFixed(2);
@@ -53,4 +54,4 @@ function Output() {
 
 const b = new Output();
 
-console.log(b.deserializer());
+b.deserializer()

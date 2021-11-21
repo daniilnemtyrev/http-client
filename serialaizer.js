@@ -1,11 +1,25 @@
+const fetchInputData = async () => {
+  const response = await fetch("http://localhost:3000/get/");
+  const data = await response.json();
+  return data;
+};
 
+const sendOutputData = async (obj) => {
+  await fetch("http://localhost:3000/writeAnswer/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+    body: JSON.stringify(obj),
+  });
+};
 
 function Input() {
   (this.k = 0),
     (this.sum = []),
     (this.mult = []),
-    (this.serializer = function (type, obj) {
-      const objFromJson = JSON.parse(obj);
+    (this.serializer = async function () {
+      const objFromJson = await fetchInputData();
       this.k = objFromJson.K;
       this.sum = objFromJson.Sums;
       this.mult = objFromJson.Muls;
@@ -14,19 +28,9 @@ function Input() {
 
 var toXML = window.jstoxml.toXML;
 
-fetch('http://localhost:3000/get/', { mode: 'no-cors',  headers: { "Access-Control-Allow-Origin": "http://localhost:3000/get/" }}, )
-  .then((response) => {
-    console.log(response.json());
-    return response.json();
-  })
-  .then((data) => {
-    console.log(data);
-  });
-
 const a = new Input();
-a.serializer(
-
-);
+a.serializer();
+console.log(a);
 
 function Output() {
   (this.sumResult = 0), (this.mulResult = 0), (this.sorted = []);
@@ -39,7 +43,7 @@ function Output() {
       .toFixed(2);
     this.sorted = a.sum.concat(a.mult).sort((a, b) => a - b);
 
-    return JSON.stringify({
+    sendOutputData({
       SumResult: this.sumResult,
       MulResult: this.mulResult,
       SortedInputs: this.sorted,
